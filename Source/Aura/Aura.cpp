@@ -1,4 +1,4 @@
-// Create By KKD
+// Copyright Druid Mechanics
 
 #include "Aura.h"
 #include "Modules/ModuleManager.h"

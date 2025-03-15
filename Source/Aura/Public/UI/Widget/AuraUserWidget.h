@@ -1,4 +1,4 @@
-// Create By KKD
+// Copyright Druid Mechanics
 
 #pragma once
 
@@ -13,22 +13,13 @@ UCLASS()
 class AURA_API UAuraUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
 public:
-	
-	// Function	
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetController(UObject* InWidgetController);
-	// Function END
-
 	
-	// Properties
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UObject> WidgetController;
-	// Properties END
-	
 protected:
-	
 	UFUNCTION(BlueprintImplementableEvent)
 	void WidgetControllerSet();
 };

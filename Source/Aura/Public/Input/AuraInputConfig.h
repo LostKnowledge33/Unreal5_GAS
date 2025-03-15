@@ -1,4 +1,4 @@
-// Create By KKD
+// Copyright Druid Mechanics
 
 #pragma once
 
@@ -26,7 +26,6 @@ UCLASS()
 class AURA_API UAuraInputConfig : public UDataAsset
 {
 	GENERATED_BODY()
-	
 public:
 
 	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = false) const;
