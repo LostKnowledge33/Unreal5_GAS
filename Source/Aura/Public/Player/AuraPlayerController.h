@@ -1,10 +1,11 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "GameplayTagContainer.h"
+#include "Interaction/NPCInterface.h"
 #include "AuraPlayerController.generated.h"
 
 
@@ -18,6 +19,10 @@ class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
 class AMagicCircle;
+
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FStartDialogueSignature, FDialogueData);
+DECLARE_MULTICAST_DELEGATE(FDialogueClickSignature);
 
 enum class ETargetingStatus : uint8
 {
@@ -46,6 +51,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HideMagicCircle();
 
+	UFUNCTION(BlueprintCallable)
+	void EndDialogue();
+
+	FORCEINLINE void SetInConversation(bool ConversationState) { bInConversation = ConversationState; }
 	
 protected:
 	virtual void BeginPlay() override;
@@ -59,6 +68,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> ShiftAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> CameraAction;
 
 	void ShiftPressed() { bShiftKeyDown = true; };
 	void ShiftReleased() { bShiftKeyDown = false; };
@@ -77,6 +89,8 @@ private:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 
+	void CameraMovement(const FInputActionValue& InputActionValue);
+
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UAuraInputConfig> InputConfig;
 
@@ -91,6 +105,10 @@ private:
 	float ShortPressThreshold = 0.5f;
 	bool bAutoRunning = false;
 	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
+
+	float fCanClickedDistance = 300.f;
+
+	bool bInConversation = false;
 
 	UPROPERTY(EditDefaultsOnly)
 	float AutoRunAcceptanceRadius = 50.f;
@@ -113,4 +131,14 @@ private:
 	TObjectPtr<AMagicCircle> MagicCircle;
 
 	void UpdateMagicCircleLocation();
+
+public:
+
+	FStartDialogueSignature FOnStartDialogueDelegate;
+
+	UPROPERTY(EditAnywhere, Category = "Dialogue")
+	float DialogueCameraBlendTime = 1.f;
+
+	UPROPERTY(EditAnywhere, Category = "Dialogue")
+	TEnumAsByte<EViewTargetBlendFunction> DialogueCameraBlendFunction = EViewTargetBlendFunction::VTBlend_Cubic;
 };

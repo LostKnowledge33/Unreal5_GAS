@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 
 #include "AbilitySystem/ModMagCalc/MMC_MaxHealth.h"

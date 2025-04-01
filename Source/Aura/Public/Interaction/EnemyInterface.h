@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 #pragma once
 

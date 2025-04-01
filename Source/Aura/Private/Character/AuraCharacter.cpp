@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 
 #include "Character/AuraCharacter.h"
@@ -26,8 +26,11 @@ AAuraCharacter::AAuraCharacter()
 {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
 	CameraBoom->SetupAttachment(GetRootComponent());
-	CameraBoom->SetUsingAbsoluteRotation(true);
+	//CameraBoom->SetUsingAbsoluteRotation(true);
 	CameraBoom->bDoCollisionTest = false;
+
+	
+	CameraBoom->AddLocalRotation(FRotator(0, 40, 0).Quaternion());
 
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>("TopDownCameraComponent");
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);

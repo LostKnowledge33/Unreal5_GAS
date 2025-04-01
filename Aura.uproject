@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.4",
+	"EngineAssociation": "{D363D32D-4064-7D20-2FE3-87B481D96E92}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -13,7 +13,10 @@
 				"GameplayAbilities",
 				"UMG",
 				"CoreUObject",
-				"EnhancedInput"
+				"EnhancedInput",
+				"AIModule",
+				"Niagara",
+				"ModelViewViewModel"
 			]
 		}
 	],
@@ -31,6 +34,14 @@
 		},
 		{
 			"Name": "MotionWarping",
+			"Enabled": true
+		},
+		{
+			"Name": "ModelViewViewModel",
+			"Enabled": true
+		},
+		{
+			"Name": "CascadeToNiagaraConverter",
 			"Enabled": true
 		}
 	]

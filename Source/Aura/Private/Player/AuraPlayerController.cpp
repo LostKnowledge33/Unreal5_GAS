@@ -1,8 +1,7 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 
 #include "Player/AuraPlayerController.h"
-
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
 #include "EnhancedInputSubsystems.h"
@@ -15,10 +14,13 @@
 #include "Components/DecalComponent.h"
 #include "Components/SplineComponent.h"
 #include "Input/AuraInputComponent.h"
-#include "Interaction/EnemyInterface.h"
 #include "GameFramework/Character.h"
+#include "Interaction/EnemyInterface.h"
 #include "Interaction/HighlightInterface.h"
+#include "Interaction/NPCInterface.h"
 #include "UI/Widget/DamageTextComponent.h"
+#include "Character/AuraCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -52,6 +54,12 @@ void AAuraPlayerController::HideMagicCircle()
 	{
 		MagicCircle->Destroy();
 	}
+}
+
+void AAuraPlayerController::EndDialogue()
+{
+	AAuraCharacter* PlayerCharacter = Cast<AAuraCharacter>(GetCharacter());
+	SetViewTargetWithBlend(GetPawn(), DialogueCameraBlendTime, DialogueCameraBlendFunction);
 }
 
 void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
@@ -148,9 +156,33 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	}
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
+		if (bInConversation)
+		{
+			return;
+		}
+
 		if (IsValid(ThisActor))
 		{
 			TargetingStatus = ThisActor->Implements<UEnemyInterface>() ? ETargetingStatus::TargetingEnemy : ETargetingStatus::TargetingNonEnemy;
+
+			if (ThisActor->Implements<UNPCInterface>())
+			{
+				APawn* PlayerPawn = GetPawn();
+				float TargetDistance = FMath::Abs(FVector::Distance(ThisActor->GetActorLocation(), PlayerPawn->GetActorLocation()));
+				if (TargetDistance <= fCanClickedDistance)
+				{
+					FDialogueData DialogueData = INPCInterface::Execute_GetDialogueData(ThisActor);
+					DialogueData.SpeakerActor = ThisActor;
+					DialogueData.PlayerActor = PlayerPawn;
+					FOnStartDialogueDelegate.Broadcast(DialogueData);
+
+					SetViewTargetWithBlend(ThisActor, DialogueCameraBlendTime, DialogueCameraBlendFunction);
+					PlayerPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(PlayerPawn->GetActorLocation(), ThisActor->GetActorLocation()));
+					
+					bInConversation = true;
+					return;
+				}
+			}
 		}
 		else
 		{
@@ -177,6 +209,11 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	
 	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftKeyDown)
 	{
+		if (bInConversation)
+		{
+			return;
+		}
+
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
@@ -225,6 +262,11 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	}
 	else
 	{
+		if (bInConversation)
+		{
+			return;
+		}
+
 		FollowTime += GetWorld()->GetDeltaSeconds();
 		if (CursorHit.bBlockingHit) CachedDestination = CursorHit.ImpactPoint;
 
@@ -235,6 +277,8 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		}
 	}
 }
+
+
 
 UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 {
@@ -270,12 +314,19 @@ void AAuraPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
-	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	//AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
+	AuraInputComponent->BindAction(CameraAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::CameraMovement);
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+
 }
 
+void AAuraPlayerController::CameraMovement(const FInputActionValue& InputActionValue)
+{
+	FVector2D InputVector = InputActionValue.Get<FVector2D>();
+}
+/*
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
 	if (GetASC() && GetASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
@@ -295,3 +346,4 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
 	}
 }
+*/

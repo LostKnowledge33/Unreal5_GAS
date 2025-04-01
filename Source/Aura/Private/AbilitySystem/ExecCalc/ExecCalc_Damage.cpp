@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 
 #include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
@@ -218,7 +218,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
 
 	// If Block, halve the damage.	
-	Damage = bBlocked ? Damage / 2.f : Damage;
+	//Damage = bBlocked ? Damage / 2.f : Damage;
 	
 	float TargetArmor = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor);
@@ -256,7 +256,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetPlayerLevel);
 
 	// Critical Hit Resistance reduces Critical Hit Chance by a certain percentage
-	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
+	const float EffectiveCriticalHitChance = SourceCriticalHitChance;// -TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
 
 	UAuraAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);

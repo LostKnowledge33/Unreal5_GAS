@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 #pragma once
 
@@ -43,6 +43,8 @@ public:
 	virtual int32 GetPlayerLevel_Implementation() override;
 	virtual void Die(const FVector& DeathImpulse) override;
 	/** end Combat Interface */
+
+	UCameraComponent* GetCameraComponent() const { return TopDownCameraComponent.Get(); }
 
 	UPROPERTY(EditDefaultsOnly)
 	float DeathTime = 5.f;

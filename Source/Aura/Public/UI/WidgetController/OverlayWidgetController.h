@@ -1,12 +1,15 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UI/WidgetController/AuraWidgetController.h"
+#include "Interaction/NPCInterface.h"
 #include "OverlayWidgetController.generated.h"
 
 struct FAuraAbilityInfo;
+struct FDialogueData;
+
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
 {
@@ -32,6 +35,8 @@ class UAuraAbilitySystemComponent;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelChangedSignature, int32, NewLevel, bool, bLevelUp);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDialogueDataSignature, FDialogueData, DialogueData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDialogueEndSignature);
 
 /**
  * 
@@ -64,6 +69,18 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Level")
 	FOnLevelChangedSignature OnPlayerLevelChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="Dialogue")
+	FDialogueDataSignature DialogueDataDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
+	FDialogueEndSignature DialogueEndDelegate;
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeConversationState(bool ConversationState);
+
+	UFUNCTION(BlueprintCallable)
+	void EndDialogue();
 
 protected:
 

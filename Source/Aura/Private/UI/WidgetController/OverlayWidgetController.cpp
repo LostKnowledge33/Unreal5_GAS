@@ -1,14 +1,14 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 
 #include "UI/WidgetController/OverlayWidgetController.h"
-
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
 #include "Player/AuraPlayerState.h"
+#include "Player/AuraPlayerController.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -17,7 +17,7 @@ void UOverlayWidgetController::BroadcastInitialValues()
 	OnMaxHealthChanged.Broadcast(GetAuraAS()->GetMaxHealth());
 	OnManaChanged.Broadcast(GetAuraAS()->GetMana());
 	OnMaxManaChanged.Broadcast(GetAuraAS()->GetMaxMana());
-	
+
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
@@ -87,7 +87,24 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			}
 		);
 	}
+
 	
+	GetAuraPC()->FOnStartDialogueDelegate.AddLambda(
+		[this](FDialogueData DialougeData)
+		{
+			DialogueDataDelegate.Broadcast(DialougeData);
+		}
+	);
+}
+
+void UOverlayWidgetController::ChangeConversationState(bool ConversationState)
+{
+	GetAuraPC()->SetInConversation(ConversationState);
+}
+
+void UOverlayWidgetController::EndDialogue()
+{
+	DialogueEndDelegate.Broadcast();
 }
 
 void UOverlayWidgetController::OnXPChanged(int32 NewXP)

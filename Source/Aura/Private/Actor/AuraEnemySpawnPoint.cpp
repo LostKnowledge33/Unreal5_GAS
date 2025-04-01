@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Created By KKD
 
 
 #include "Actor/AuraEnemySpawnPoint.h"
@@ -7,6 +7,8 @@
 
 void AAuraEnemySpawnPoint::SpawnEnemy()
 {
+	if (!HasAuthority()) return;
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
