@@ -18,6 +18,7 @@
 #include "Camera/CameraComponent.h"
 #include "Game/AuraGameModeBase.h"
 #include "Game/LoadScreenSaveGame.h"
+#include "Game/AuraGameInstance.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/HUD/AuraHUD.h"
@@ -97,6 +98,11 @@ void AAuraCharacter::LoadProgress()
 			UAuraAbilitySystemLibrary::InitializeDefaultAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
 		}
 	}
+}
+
+void AAuraCharacter::SendPacket(const FString& Packet)
+{
+	
 }
 
 void AAuraCharacter::OnRep_PlayerState()

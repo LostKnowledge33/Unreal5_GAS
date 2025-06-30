@@ -12,6 +12,8 @@ class USaveGame;
 class UMVVM_LoadSlot;
 class UAbilityInfo;
 class UCharacterClassInfo;
+class UUserWidget;
+
 /**
  * 
  */
@@ -54,6 +56,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<FString, TSoftObjectPtr<UWorld>> Maps;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSoftObjectPtr<UUserWidget> MainMenuWidget;
 
 	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
 

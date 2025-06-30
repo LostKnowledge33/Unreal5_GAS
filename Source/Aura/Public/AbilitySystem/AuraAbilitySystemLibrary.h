@@ -15,6 +15,7 @@ class USpellMenuWidgetController;
 class UAbilitySystemComponent;
 class UAttributeMenuWidgetController;
 class UOverlayWidgetController;
+class ULoginWidgetController;
 struct FWidgetControllerParams;
 /**
  * 
@@ -40,6 +41,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
 	static USpellMenuWidgetController* GetSpellMenuWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	static ULoginWidgetController* GetLoginWidgetController(const UObject* WorldContextObject);
 
 	/*
 	 * Ability System Class Defaults

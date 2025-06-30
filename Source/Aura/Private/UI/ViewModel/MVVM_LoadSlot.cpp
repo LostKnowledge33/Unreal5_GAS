@@ -28,3 +28,8 @@ void UMVVM_LoadSlot::SetLoadSlotName(FString InLoadSlotName)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(LoadSlotName, InLoadSlotName);
 }
+
+void UMVVM_LoadSlot::SetCharacterClass(ECharacterClass InCharacterClass)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(CharacterClass, InCharacterClass);
+}

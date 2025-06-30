@@ -58,6 +58,10 @@ public:
 	virtual void OnRep_Burned() override;
 
 	void LoadProgress();
+
+	UFUNCTION(BlueprintCallable)
+	void SendPacket(const FString& Packet);
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UCameraComponent> TopDownCameraComponent;

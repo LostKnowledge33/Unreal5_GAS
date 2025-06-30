@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
 #include "Game/LoadScreenSaveGame.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "MVVM_LoadSlot.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSetWidgetSwitcherIndex, int32, WidgetSwitcherIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnableSelectSlotButton, bool, bEnable);
+
 
 /**
  * 
@@ -47,12 +49,13 @@ public:
 	void SetMapName(FString InMapName);
 	void SetPlayerLevel(int32 InLevel);
 	void SetLoadSlotName(FString InLoadSlotName);
+	void SetCharacterClass(ECharacterClass CharacterClass);
 
 	FString GetPlayerName() const { return PlayerName; }
 	FString GetMapName() const { return MapName; }
 	int32 GetPlayerLevel() const { return PlayerLevel; }
 	FString GetLoadSlotName() const { return LoadSlotName; }
-
+	ECharacterClass GetCharacterClass() const { return CharacterClass; }
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess="true"));
@@ -66,4 +69,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess="true"));
 	FString LoadSlotName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"));
+	ECharacterClass CharacterClass;
 };
